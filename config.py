@@ -43,9 +43,13 @@ REQUEST_TIMEOUT = 15     # 요청 타임아웃 (초)
 MAX_RETRIES = 3          # 최대 재시도 횟수
 EARLY_STOP_PAGES = 2     # 매칭 발견 후 연속 미발견 시 중단 페이지 수
 
-# DB
+# DB — Streamlit Cloud는 /tmp에만 쓰기 가능
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "data" / "tracker.db"
+_data_dir = BASE_DIR / "data"
+if not os.access(str(_data_dir), os.W_OK):
+    _data_dir = Path("/tmp/keyword-tracker-data")
+_data_dir.mkdir(parents=True, exist_ok=True)
+DB_PATH = _data_dir / "tracker.db"
 
 # 정렬 옵션
 SORT_OPTIONS = {
